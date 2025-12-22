@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>My Cards</title>
+</head>
+
+<body>
+    <h1>My Cards</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Card ID</th>
+                <th>Card Number</th>
+                <th>Type</th>
+                <th>Credit Limit</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="card : ${cards}">
+                <td th:text="${card.cardId}"></td>
+                <td th:text="${card.cardNumber}"></td>
+                <td th:text="${card.cardType}"></td>
+                <td th:text="${card.creditLimit}"></td>
+                <td th:text="${card.status}"></td>
+                <td>
+                    <a th:href="@{/transactions(cardId=${card.cardId})}">View Txns</a>
+
+                    <!-- Only show approve and set limit for BANKER role -->
+                    <div th:if="${#authorization.expression('hasRole(''BANKER'')')}">
+                        <form th:if="${card.status.name() == 'PENDING'}"
+                            th:action="@{/cards/approve/{id}(id=${card.cardId})}" method="post" style="display:inline;">
+                            <button type="submit">Approve</button>
+                        </form>
+
+                        <form th:action="@{/cards/limit/{id}(id=${card.cardId})}" method="post" style="display:inline;">
+                            <input type="number" name="amount" placeholder="Limit" style="width: 60px;" required />
+                            <button type="submit">Set</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="/dashboard">Back to Dashboard</a>
+</body>
+
+</html>

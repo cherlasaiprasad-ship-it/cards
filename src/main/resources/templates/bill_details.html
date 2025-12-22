@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Bill Details</title>
+</head>
+
+<body>
+    <h1>Bill Details</h1>
+    <div>
+        <p><strong>Bill ID:</strong> <span th:text="${bill.billId}"></span></p>
+        <p><strong>Card Number:</strong> <span th:text="${bill.card.cardNumber}"></span></p>
+        <p><strong>Billing Date:</strong> <span th:text="${bill.billingDate}"></span></p>
+        <p><strong>Due Date:</strong> <span th:text="${bill.dueDate}"></span></p>
+        <p><strong>Total Amount:</strong> <span th:text="${bill.totalAmount}"></span></p>
+        <p><strong>Status:</strong> <span th:text="${bill.status}"></span></p>
+    </div>
+    <br />
+    <a th:href="@{/billing/download/{id}(id=${bill.billId})}" class="button">Download Bill</a>
+    <br /><br />
+    <a href="/dashboard">Back to Dashboard</a>
+</body>
+
+</html>

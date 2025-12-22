@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Card Approvals</title>
+</head>
+<body>
+    <h1>Admin: Card Applications & Approvals</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Card ID</th>
+                <th>User</th>
+                <th>Card Number</th>
+                <th>Type</th>
+                <th>Credit Limit</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="card : ${cards}">
+                <td th:text="${card.cardId}"></td>
+                <td th:text="${card.user.username}"></td>
+                <td th:text="${card.cardNumber}"></td>
+                <td th:text="${card.cardType}"></td>
+                <td th:text="${card.creditLimit}"></td>
+                <td th:text="${card.status}"></td>
+                <td>
+                    <form th:if="${card.status.name() == 'PENDING'}" th:action="@{/admin/cards/approve/{id}(id=${card.cardId})}" method="post" style="display:inline;">
+                        <button type="submit">Approve</button>
+                    </form>
+                    <form th:action="@{/admin/cards/limit/{id}(id=${card.cardId})}" method="post" style="display:inline;">
+                        <input type="number" name="amount" placeholder="Limit" style="width: 60px;" required />
+                        <button type="submit">Set Limit</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 60px auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2 class="mb-4 text-center">Login</h2>
+        <div th:if="${param.error}" class="alert alert-danger">Invalid username/email or password.</div>
+        <div th:if="${param.logout}" class="alert alert-success">You have been logged out.</div>
+        <form th:action="@{/login}" method="post">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username or Email</label>
+                <input type="text" class="form-control" id="username" name="username" required autofocus>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Sign In</button>
+        </form>
+        <div class="mt-3 text-center">
+            <a href="/register">Register as Customer</a>
+        </div>
+    </div>
+</body>
+
+</html>

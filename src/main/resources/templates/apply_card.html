@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Apply for Card</title>
+</head>
+
+<body>
+    <h1>Apply for Card</h1>
+    <div th:if="${error}" style="color: red">
+        <p th:text="${error}"></p>
+    </div>
+    <form th:action="@{/cards/apply}" th:object="${card}" method="post">
+        <div>
+            <label>Card Type:
+                <select th:field="*{cardType}">
+                    <option value="Visa">Visa</option>
+                    <option value="MasterCard">MasterCard</option>
+                    <option value="RuPay">RuPay</option>
+                </select>
+            </label>
+        </div>
+        <div>
+            <label>Card Number: <input type="text" th:field="*{cardNumber}" /></label>
+        </div>
+        <div>
+            <label>Credit Limit: <input type="number" step="0.01" th:field="*{creditLimit}" /></label>
+        </div>
+        <div><input type="submit" value="Apply" /></div>
+    </form>
+</body>
+
+</html>

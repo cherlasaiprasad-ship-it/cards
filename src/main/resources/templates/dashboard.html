@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <h1>Dashboard</h1>
+    <ul>
+        <li><a href="/cards">My Cards</a></li>
+        <li><a href="/cards/apply">Apply for Card</a></li>
+        <li><a href="/transactions/new">Make Transaction</a></li>
+        <li><a href="/billing/generate">Generate Bill</a></li>
+        <li><a href="/support/create">Contact Support</a></li>
+    </ul>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Logout" />
+    </form>
+</body>
+
+</html>
