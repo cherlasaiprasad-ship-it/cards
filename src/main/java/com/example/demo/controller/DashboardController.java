@@ -19,6 +19,12 @@ public class DashboardController {
     @PreAuthorize("hasRole('CUSTOMER')")
     @GetMapping("/customer/dashboard")
     public String customerDashboard() {
+        return "abin";
+    }
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @GetMapping("/customer_dashboard")
+    public String customerDashboard2() {
         return "customer_dashboard";
     }
+    
 }
