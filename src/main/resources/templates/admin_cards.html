@@ -2,41 +2,130 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Admin - Card Approvals</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/apply.css}" />
 </head>
-<body>
-    <h1>Admin: Card Applications & Approvals</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Card ID</th>
-                <th>User</th>
-                <th>Card Number</th>
-                <th>Type</th>
-                <th>Credit Limit</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="card : ${cards}">
-                <td th:text="${card.cardId}"></td>
-                <td th:text="${card.user.username}"></td>
-                <td th:text="${card.cardNumber}"></td>
-                <td th:text="${card.cardType}"></td>
-                <td th:text="${card.creditLimit}"></td>
-                <td th:text="${card.status}"></td>
-                <td>
-                    <form th:if="${card.status.name() == 'PENDING'}" th:action="@{/admin/cards/approve/{id}(id=${card.cardId})}" method="post" style="display:inline;">
-                        <button type="submit">Approve</button>
+<body class="admin-bg">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">MyBank</a>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/cards">Card Approvals</a></li>
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post" style="display:inline; margin:0;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="nav-link btn btn-link" style="padding:0;">Logout</button>
                     </form>
-                    <form th:action="@{/admin/cards/limit/{id}(id=${card.cardId})}" method="post" style="display:inline;">
-                        <input type="number" name="amount" placeholder="Limit" style="width: 60px;" required />
-                        <button type="submit">Set Limit</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <a href="/dashboard">Back to Dashboard</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Admin: Card Applications & Approvals</h2>
+        <a href="/admin/dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
+
+    <div th:if="${filterStatus != null}">
+        <div class="mb-3">
+            <a href="/admin/cards" class="btn btn-outline-secondary btn-sm">Clear Filter</a>
+        </div>
+        <h4 th:text="${filterStatus} + ' Cards'"></h4>
+        <div class="row g-4 mt-2">
+            <!-- Render each card as a responsive card (like customer view) -->
+            <div class="col-md-6 col-lg-4" th:each="card : ${cards}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 class="card-title mb-1" th:text="${card.fullName != null ? card.fullName : card.user.username}"></h5>
+                                <p class="text-muted small mb-0" th:text="${card.cardType} + (card.bankName != null ? ' • ' + card.bankName : '')"></p>
+                            </div>
+                            <div>
+                                <span class="badge" th:classappend="${card.status.name()=='ACTIVE' ? ' bg-success' : (card.status.name()=='PENDING' ? ' bg-warning text-dark' : (card.status.name()=='BLOCKED' ? ' bg-danger' : ' bg-info text-dark'))}" th:text="${card.status}"></span>
+                            </div>
+                        </div>
+
+                        <p class="display-6 mb-1 fw-bold" th:text="${card.cardNumber != null ? #strings.concat('XXXX-XXXX-XXXX-', card.cardNumber.substring(card.cardNumber.length() - 4)) : 'Pending'}"></p>
+                        <p class="mb-3 text-muted">Limit: <span th:text="${card.creditLimit}"></span></p>
+
+                        <div class="mt-auto d-flex gap-2">
+                            <a th:if="${card.status.name() == 'ACTIVE'}" th:href="@{/transactions(cardId=${card.cardId})}" class="btn btn-outline-primary btn-sm">Transactions</a>
+
+                            <form th:if="${card.status.name() == 'PENDING'}" th:action="@{/admin/cards/approve/{id}(id=${card.cardId})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                            </form>
+
+                            <a th:href="@{/cards/details}" class="btn btn-outline-secondary btn-sm">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div th:unless="${filterStatus != null}">
+        <div class="row g-4">
+            <!-- Replace three-column layout with a 2x2 grid of category cards -->
+            <div class="col-12 col-md-6">
+                <a th:href="@{/admin/cards(status='PENDING')}" class="text-decoration-none text-reset">
+                    <div class="card p-3 shadow-sm h-100 clickable-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">Pending Cards</h5>
+                            <span class="badge bg-warning text-dark" th:text="${cards.?[status.name()=='PENDING'].size()} + ' Pending'"></span>
+                        </div>
+                        <p class="mb-0 text-muted">Applications waiting for approval.</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <a th:href="@{/admin/cards(status='ACTIVE')}" class="text-decoration-none text-reset">
+                    <div class="card p-3 shadow-sm h-100 clickable-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">Active Cards</h5>
+                            <span class="badge bg-success" th:text="${cards.?[status.name()=='ACTIVE'].size()} + ' Active'"></span>
+                        </div>
+                        <p class="mb-0 text-muted">Currently active and usable cards.</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <a th:href="@{/admin/cards(status='NEWLY')}" class="text-decoration-none text-reset">
+                    <div class="card p-3 shadow-sm h-100 clickable-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">Newly Applied</h5>
+                            <span class="badge bg-info text-dark" th:text="${cards.?[status.name()!='ACTIVE' && status.name()!='PENDING'].size()} + ' Items'"></span>
+                        </div>
+                        <p class="mb-0 text-muted">Recently submitted applications (not active/pending).</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <a th:href="@{/admin/cards(status='BLOCKED')}" class="text-decoration-none text-reset">
+                    <div class="card p-3 shadow-sm h-100 clickable-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">Blocked Cards</h5>
+                            <span class="badge bg-danger" th:text="${cards.?[status.name()=='BLOCKED'].size()} + ' Blocked'"></span>
+                        </div>
+                        <p class="mb-0 text-muted">Cards that have been blocked/disabled.</p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

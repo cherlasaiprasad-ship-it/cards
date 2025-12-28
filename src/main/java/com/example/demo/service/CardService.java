@@ -79,4 +79,8 @@ public class CardService {
     public List<Card> getCardsByUser(User user) {
         return cardRepository.findByUser(user);
     }
+
+    public List<Card> getCardsByStatus(Card.Status status) {
+        return cardRepository.findByStatus(status);
+    }
 }

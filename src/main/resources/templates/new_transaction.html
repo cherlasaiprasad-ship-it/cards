@@ -3,34 +3,38 @@
 
 <head>
     <title>New Transaction</title>
+    <link rel="stylesheet" th:href="@{/css/apply.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<body>
-    <h1>New Transaction</h1>
-    <div th:if="${error}" style="color: red">
-        <p th:text="${error}"></p>
+<body class="app-bg">
+    <div class="container mt-4">
+        <h1>New Transaction</h1>
+        <div th:if="${error}" style="color: red">
+            <p th:text="${error}"></p>
+        </div>
+        <form th:action="@{/transactions/new}" th:object="${transaction}" method="post">
+            <div>
+                <label>Card:
+                    <select th:field="*{card.cardId}">
+                        <option th:each="c : ${cards}" th:value="${c.cardId}"
+                            th:text="${c.cardNumber + ' (' + c.cardType + ')'}">
+                        </option>
+                    </select>
+                </label>
+            </div>
+            <div>
+                <label>Merchant: <input type="text" th:field="*{merchantName}" /></label>
+            </div>
+            <div>
+                <label>Amount: <input type="number" step="0.01" th:field="*{amount}" /></label>
+            </div>
+            <div>
+                <label>Date: <input type="datetime-local" th:field="*{transactionDate}" /></label>
+            </div>
+            <div><input type="submit" value="Pay" class="btn btn-primary"/></div>
+        </form>
     </div>
-    <form th:action="@{/transactions/new}" th:object="${transaction}" method="post">
-        <div>
-            <label>Card:
-                <select th:field="*{card.cardId}">
-                    <option th:each="c : ${cards}" th:value="${c.cardId}"
-                        th:text="${c.cardNumber + ' (' + c.cardType + ')'}">
-                    </option>
-                </select>
-            </label>
-        </div>
-        <div>
-            <label>Merchant: <input type="text" th:field="*{merchantName}" /></label>
-        </div>
-        <div>
-            <label>Amount: <input type="number" step="0.01" th:field="*{amount}" /></label>
-        </div>
-        <div>
-            <label>Date: <input type="datetime-local" th:field="*{transactionDate}" /></label>
-        </div>
-        <div><input type="submit" value="Pay" /></div>
-    </form>
 </body>
 
 </html>

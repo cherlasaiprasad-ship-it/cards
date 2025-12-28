@@ -3,9 +3,11 @@
 
 <head>
     <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/apply.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<body>
+<body class="app-bg">
     <h1>Register</h1>
     <div th:if="${error}" style="color: red">
         <p th:text="${error}"></p>

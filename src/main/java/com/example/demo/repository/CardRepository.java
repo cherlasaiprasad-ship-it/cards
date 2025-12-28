@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> findByUser(User user);
+    List<Card> findByStatus(Card.Status status);
 }

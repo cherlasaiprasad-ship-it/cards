@@ -3,34 +3,38 @@
 
 <head>
     <title>Generate Bill</title>
+    <link rel="stylesheet" th:href="@{/css/apply.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<body>
-    <h1>Generate Bill</h1>
-    <div th:if="${error}" style="color: red">
-        <p th:text="${error}"></p>
+<body class="app-bg">
+    <div class="container mt-4">
+        <h1>Generate Bill</h1>
+        <div th:if="${error}" style="color: red">
+            <p th:text="${error}"></p>
+        </div>
+        <form th:action="@{/billing/generate}" th:object="${bill}" method="post">
+            <div>
+                <label>Card:
+                    <select th:field="*{card.cardId}">
+                        <option th:each="c : ${cards}" th:value="${c.cardId}"
+                            th:text="${c.cardNumber + ' (' + c.cardType + ')'}">
+                        </option>
+                    </select>
+                </label>
+            </div>
+            <div>
+                <label>Amount: <input type="number" step="0.01" th:field="*{totalAmount}" /></label>
+            </div>
+            <div>
+                <label>Billing Date: <input type="date" th:field="*{billingDate}" /></label>
+            </div>
+            <div>
+                <label>Due Date: <input type="date" th:field="*{dueDate}" /></label>
+            </div>
+            <div><input type="submit" value="Generate" class="btn btn-primary"/></div>
+        </form>
     </div>
-    <form th:action="@{/billing/generate}" th:object="${bill}" method="post">
-        <div>
-            <label>Card:
-                <select th:field="*{card.cardId}">
-                    <option th:each="c : ${cards}" th:value="${c.cardId}"
-                        th:text="${c.cardNumber + ' (' + c.cardType + ')'}">
-                    </option>
-                </select>
-            </label>
-        </div>
-        <div>
-            <label>Amount: <input type="number" step="0.01" th:field="*{totalAmount}" /></label>
-        </div>
-        <div>
-            <label>Billing Date: <input type="date" th:field="*{billingDate}" /></label>
-        </div>
-        <div>
-            <label>Due Date: <input type="date" th:field="*{dueDate}" /></label>
-        </div>
-        <div><input type="submit" value="Generate" /></div>
-    </form>
 </body>
 
 </html>

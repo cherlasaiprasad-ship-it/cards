@@ -1,10 +1,15 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Card;
 import com.example.demo.service.CardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 @RequestMapping("/banker/cards")
@@ -12,13 +17,35 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public class BankerCardController {
     private final CardService cardService;
 
+    private static final Logger log = LoggerFactory.getLogger(BankerCardController.class);
+
     public BankerCardController(CardService cardService) {
         this.cardService = cardService;
     }
 
     @GetMapping("")
-    public String getAllCards(Model model) {
-        model.addAttribute("cards", cardService.getAllCards());
+    public String getAllCards(@RequestParam(value = "status", required = false) String status, Model model) {
+        List<Card> cards;
+        log.info("BankerCardController.getAllCards called with status={}", status);
+        if (status != null) {
+            try {
+                if ("NEWLY".equalsIgnoreCase(status) || "NEWLY_APPLIED".equalsIgnoreCase(status) || "OTHER".equalsIgnoreCase(status)) {
+                    cards = cardService.getAllCards();
+                    cards = cards.stream().filter(c -> c.getStatus() != Card.Status.ACTIVE && c.getStatus() != Card.Status.PENDING).toList();
+                    model.addAttribute("filterStatus", "NEWLY APPLIED");
+                } else {
+                    Card.Status s = Card.Status.valueOf(status.toUpperCase());
+                    cards = cardService.getCardsByStatus(s);
+                    model.addAttribute("filterStatus", s.name());
+                }
+            } catch (IllegalArgumentException e) {
+                cards = cardService.getAllCards();
+            }
+        } else {
+            cards = cardService.getAllCards();
+        }
+        model.addAttribute("cards", cards);
+        log.info("Returning {} cards for status={}", cards != null ? cards.size() : 0, status);
         return "banker_cards";
     }
 

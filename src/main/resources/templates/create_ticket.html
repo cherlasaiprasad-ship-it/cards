@@ -3,22 +3,26 @@
 
 <head>
     <title>Support</title>
+    <link rel="stylesheet" th:href="@{/css/apply.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<body>
-    <h1>Create Support Ticket</h1>
-    <div th:if="${error}" style="color: red">
-        <p th:text="${error}"></p>
+<body class="app-bg">
+    <div class="container mt-4">
+        <h1>Create Support Ticket</h1>
+        <div th:if="${error}" style="color: red">
+            <p th:text="${error}"></p>
+        </div>
+        <form th:action="@{/support/create}" th:object="${ticket}" method="post">
+            <div>
+                <label>User ID: <input type="number" th:field="*{user.userId}" /></label>
+            </div>
+            <div>
+                <label>Issue: <textarea th:field="*{issueDescription}"></textarea></label>
+            </div>
+            <div><input type="submit" value="Submit" class="btn btn-primary"/></div>
+        </form>
     </div>
-    <form th:action="@{/support/create}" th:object="${ticket}" method="post">
-        <div>
-            <label>User ID: <input type="number" th:field="*{user.userId}" /></label>
-        </div>
-        <div>
-            <label>Issue: <textarea th:field="*{issueDescription}"></textarea></label>
-        </div>
-        <div><input type="submit" value="Submit" /></div>
-    </form>
 </body>
 
 </html>

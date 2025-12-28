@@ -3,31 +3,155 @@
 
 <head>
     <title>Apply for Card</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" th:href="@{/css/apply.css}" />
 </head>
 
-<body>
-    <h1>Apply for Card</h1>
-    <div th:if="${error}" style="color: red">
-        <p th:text="${error}"></p>
+<body class="customer-bg">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">MyBank</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
+                    aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/customer/dashboard">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/cards">My Cards</a></li>
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <button type="submit" class="btn btn-link nav-link" style="cursor: pointer; text-decoration: none; background: none;">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h3 class="mb-0">Apply for Card</h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${error}" class="alert alert-danger" role="alert">
+                            <p th:text="${error}"></p>
+                        </div>
+
+                        <form th:action="@{/cards/apply}" th:object="${card}" method="post" enctype="multipart/form-data">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Card Type</label>
+                                    <select th:field="*{cardType}" class="form-select" th:classappend="${#fields.hasErrors('cardType')}? ' is-invalid'">
+                                        <option value="Visa">Visa</option>
+                                        <option value="MasterCard">MasterCard</option>
+                                        <option value="RuPay">RuPay</option>
+                                    </select>
+                                    <div class="invalid-feedback" th:errors="*{cardType}"></div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Card Number</label>
+                                    <input type="text" th:field="*{cardNumber}" class="form-control" placeholder="Optional (auto-generated on approval)" th:classappend="${#fields.hasErrors('cardNumber')}? ' is-invalid'" />
+                                    <div class="invalid-feedback" th:errors="*{cardNumber}"></div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Credit Limit</label>
+                                    <input type="number" step="0.01" th:field="*{creditLimit}" class="form-control" th:classappend="${#fields.hasErrors('creditLimit')}? ' is-invalid'" />
+                                    <div class="invalid-feedback" th:errors="*{creditLimit}"></div>
+                                </div>
+
+                                <div class="col-12"><hr /></div>
+
+                                <div class="col-12">
+                                    <h5 class="mb-3">Applicant Information</h5>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Bank Name</label>
+                                    <input type="text" th:field="*{bankName}" class="form-control" th:classappend="${#fields.hasErrors('bankName')}? ' is-invalid'" />
+                                    <div class="invalid-feedback" th:errors="*{bankName}"></div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" th:field="*{fullName}" class="form-control" th:classappend="${#fields.hasErrors('fullName')}? ' is-invalid'" />
+                                    <div class="invalid-feedback" th:errors="*{fullName}"></div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" th:field="*{email}" class="form-control" th:classappend="${#fields.hasErrors('email')}? ' is-invalid'" />
+                                    <div class="invalid-feedback" th:errors="*{email}"></div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone No</label>
+                                    <input type="text" th:field="*{phoneNumber}" class="form-control" th:classappend="${#fields.hasErrors('phoneNumber')}? ' is-invalid'" />
+                                    <div class="invalid-feedback" th:errors="*{phoneNumber}"></div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Address</label>
+                                    <textarea th:field="*{address}" class="form-control" rows="3" th:classappend="${#fields.hasErrors('address')}? ' is-invalid'"></textarea>
+                                    <div class="invalid-feedback" th:errors="*{address}"></div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">State</label>
+                                    <input type="text" th:field="*{state}" class="form-control" th:classappend="${#fields.hasErrors('state')}? ' is-invalid'" />
+                                    <div class="invalid-feedback" th:errors="*{state}"></div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">City</label>
+                                    <input type="text" th:field="*{city}" class="form-control" th:classappend="${#fields.hasErrors('city')}? ' is-invalid'" />
+                                    <div class="invalid-feedback" th:errors="*{city}"></div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Pincode</label>
+                                    <input type="text" th:field="*{pincode}" class="form-control" th:classappend="${#fields.hasErrors('pincode')}? ' is-invalid'" />
+                                    <div class="invalid-feedback" th:errors="*{pincode}"></div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Occupation</label>
+                                    <input type="text" th:field="*{occupation}" class="form-control" th:classappend="${#fields.hasErrors('occupation')}? ' is-invalid'" />
+                                    <div class="invalid-feedback" th:errors="*{occupation}"></div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Upload PAN Card</label>
+                                    <input type="file" name="panFile" accept="application/pdf,image/*" class="form-control" />
+                                    <div class="form-text text-muted">Accepted: PDF, JPG, PNG. Max 2MB</div>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('panFileData')}" th:errors="*{panFileData}"></div>
+                                </div>
+
+                                <div class="col-12 text-end mt-3">
+                                    <a href="/cards" class="btn btn-outline-secondary me-2">Cancel</a>
+                                    <button type="submit" class="btn btn-primary">Apply Now</button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <p class="text-muted small mt-3">Note: Card number will be assigned by the bank after approval. We retain uploaded PAN securely for verification.</p>
+            </div>
+        </div>
     </div>
-    <form th:action="@{/cards/apply}" th:object="${card}" method="post">
-        <div>
-            <label>Card Type:
-                <select th:field="*{cardType}">
-                    <option value="Visa">Visa</option>
-                    <option value="MasterCard">MasterCard</option>
-                    <option value="RuPay">RuPay</option>
-                </select>
-            </label>
-        </div>
-        <div>
-            <label>Card Number: <input type="text" th:field="*{cardNumber}" /></label>
-        </div>
-        <div>
-            <label>Credit Limit: <input type="number" step="0.01" th:field="*{creditLimit}" /></label>
-        </div>
-        <div><input type="submit" value="Apply" /></div>
-    </form>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

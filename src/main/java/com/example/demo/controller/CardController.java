@@ -8,6 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -42,16 +45,46 @@ public class CardController {
     }
 
     @PostMapping("/apply")
-    public String applyCard(@ModelAttribute Card card, java.security.Principal principal, Model model) {
+    public String applyCard(@Valid @ModelAttribute Card card, BindingResult bindingResult,
+                            @RequestParam(value = "panFile", required = false) MultipartFile panFile,
+                            java.security.Principal principal, Model model) {
         try {
+            // validate file: size <= 2MB and allowed types
+            if (panFile != null && !panFile.isEmpty()) {
+                long maxBytes = 2 * 1024 * 1024; // 2MB
+                if (panFile.getSize() > maxBytes) {
+                    bindingResult.rejectValue("panFileData", "panFile.size", "PAN file must be <= 2MB");
+                }
+                String contentType = panFile.getContentType();
+                if (contentType == null ||
+                        !(contentType.equals("application/pdf") || contentType.startsWith("image/"))) {
+                    bindingResult.rejectValue("panFileData", "panFile.type", "PAN must be a PDF or image file");
+                }
+            }
+
+            if (bindingResult.hasErrors()) {
+                model.addAttribute("card", card);
+                return "apply_card";
+            }
+
             String username = principal.getName();
             com.example.demo.model.User user = authService.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             card.setUser(user);
+
+            if (panFile != null && !panFile.isEmpty()) {
+                card.setPanFileName(panFile.getOriginalFilename());
+                card.setPanFileData(panFile.getBytes());
+            }
+
             cardService.applyCard(card);
             return "redirect:/cards";
         } catch (RuntimeException e) {
             model.addAttribute("error", "Error: " + e.getMessage());
+            model.addAttribute("card", card);
+            return "apply_card";
+        } catch (Exception e) {
+            model.addAttribute("error", "File upload error: " + e.getMessage());
             model.addAttribute("card", card);
             return "apply_card";
         }
