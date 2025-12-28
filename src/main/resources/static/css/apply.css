@@ -1,0 +1,145 @@
+/* Custom styles for apply_card form */
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+.card-header h3 {
+    color: #0d6efd;
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg,#0d6efd,#6610f2);
+    border: none;
+}
+
+.btn-primary:hover {
+    filter: brightness(0.95);
+}
+
+.navbar-brand {
+    font-weight: 700;
+}
+
+.note {
+    font-size: 0.85rem;
+}
+
+.card .display-6 {
+    font-size: 1.25rem;
+}
+
+.badge.bg-info {
+    background: linear-gradient(90deg,#6dd3ff,#3b82f6);
+    color: #fff;
+}
+
+.table thead th {
+    font-weight: 600;
+}
+
+.table-responsive {
+    background: #fff;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.clickable-card {
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    cursor: pointer;
+}
+.clickable-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(13, 110, 253, 0.08);
+}
+
+@media (max-width: 576px) {
+    .card-body { padding: 1rem; }
+}
+
+/* Background utility classes for pages — replace the URL with your preferred image or color */
+.customer-bg {
+    /* Fallback color */
+    background-color: #eef2ff;
+    /* Dummy image (Unsplash) + light overlay to keep content readable. Replace URL with your image. */
+    background-image: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+.login-bg {
+    /* Fallback color */
+    background-color: #f8fafc;
+    /* Stronger dark overlay + reliable placeholder image. Replace URL with your image if needed. */
+    background-image: linear-gradient(180deg, rgba(0,0,0,0.36), rgba(0,0,0,0.18)), url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1400&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* keep the background fixed for a nicer effect */
+    background-attachment: fixed;
+    /* ensure overlay blends well */
+    background-blend-mode: overlay;
+    min-height: 100vh;
+}
+
+/* Login container style so the form remains readable on top of the background */
+.login-container {
+    max-width: 420px;
+    margin: 60px auto;
+    padding: 2rem;
+    background: rgba(255,255,255,0.92);
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(10, 20, 40, 0.12);
+}
+
+/* Admin background: slightly darker professional look */
+.admin-bg {
+    background-color: #f4f7fb;
+    background-image: linear-gradient(rgba(0,0,0,0.04), rgba(0,0,0,0.02)), url('https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+/* Banker background: subtle business/finance image */
+.banker-bg {
+    background-color: #eef6f9;
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('https://images.unsplash.com/photo-1542223616-8f3b1b3a6d1b?q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+/* Generic app background for other pages */
+.app-bg {
+    background-color: #fbfcff;
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.65), rgba(255,255,255,0.65)), url('https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=1400&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+/* Ensure content container has padding so background shows around content */
+.container, .container-fluid {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
